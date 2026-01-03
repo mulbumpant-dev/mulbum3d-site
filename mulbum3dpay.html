@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mulbum3D Printing</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AWlxRpEWuzvjdHyQ__cKpDgK7pj-qfWo8qGO9BkOlUq_TpiRoChpAdRWsuQp3TqDdH6R3iuql3LBWO_u&currency=GBP"></script>
+
+<style>
+body {
+  background: #000;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Soft ambient backlight */
+.background-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(255, 122, 26, 0.035),
+      rgba(255, 122, 26, 0.015) 30%,
+      rgba(0, 0, 0, 0) 60%
+    );
+  filter: blur(90px);
+}
+
+/* Glass containers */
+.glass {
+  background: rgba(255,255,255,0.045);
+  backdrop-filter: blur(22px);
+  border-radius: 28px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  position: relative;
+  z-index: 10;
+}
+
+/* Inputs and selects */
+input, textarea, select {
+  background: rgba(255,255,255,0.07);
+  color: white;
+  border-radius: 18px;
+  border: none;
+  padding: 14px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+/* Upload button */
+.upload-btn {
+  background: #ff7a1a;
+  box-shadow:
+    0 0 18px rgba(255,122,26,0.9),
+    0 0 45px rgba(255,122,26,0.5);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 26px rgba(255,122,26,1),
+    0 0 60px rgba(255,122,26,0.7);
+}
+
+/* Section titles */
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Divider */
+hr {
+  border-color: rgba(255,255,255,0.08);
+}
+</style>
+</head>
+
+<body class="min-h-screen flex justify-center p-6 text-white">
+
+<!-- Ambient backlight -->
+<div class="background-glow"></div>
+
+<!-- Main content -->
+<div class="max-w-3xl w-full glass p-10 space-y-10">
+
+<header class="text-center space-y-4">
+  <img src="logo.png" class="w-44 mx-auto">
+  <h1 class="text-4xl font-extrabold tracking-tight">
+    Professional 3D Printing
+  </h1>
+  <p class="text-white/65 text-lg">
+    Precision manufacturing · Premium finish
+  </p>
+</header>
+
+<div class="glass p-5 text-center space-y-1">
+  <p class="font-semibold">£1 / hour · £0.01 / gram PLA</p>
+  <p class="text-sm text-white/60">Free shipping on orders over £50</p>
+  <p class="text-sm text-orange-400 mt-2">
+    Multi-colour prints require manual quoting — contact us via Gmail
+  </p>
+</div>
+
+<section class="space-y-4">
+  <h2 class="section-title">Instant Cost Estimate</h2>
+  <div class="glass p-6 space-y-3">
+    <div class="flex justify-between"><span>Items</span><span id="items-cost">£0.00</span></div>
+    <div class="flex justify-between"><span>Shipping</span><span id="shipping-cost">£0.00</span></div>
+    <hr>
+    <div class="flex justify-between text-xl font-bold">
+      <span>Total</span><span id="cost">£0.00</span>
+    </div>
+  </div>
+</section>
+
+<section class="space-y-4">
+  <h2 class="section-title">Customer Details</h2>
+  <input id="customer-name" placeholder="Full name">
+  <input id="postcode" placeholder="Postcode">
+  <textarea id="address" placeholder="Full delivery address"></textarea>
+</section>
+
+<section class="space-y-3">
+  <h2 class="section-title">Upload 3D Model</h2>
+
+  <label class="upload-btn block text-center py-5 rounded-2xl cursor-pointer font-bold text-black text-lg">
+    Choose File
+    <input id="model-upload" type="file" class="hidden" accept=".obj,.3mf,.amf">
+  </label>
+
+  <p class="text-sm text-white/55">
+    Supported: OBJ · 3MF · AMF — Max 50MB
+  </p>
+</section>
+
+<section class="space-y-3">
+  <h2 class="section-title">PLA Colour</h2>
+  <select id="pla-color">
+    <option>White</option>
+    <option>Black</option>
+    <option>Red</option>
+    <option>Blue</option>
+    <option>Green</option>
+  </select>
+</section>
+
+<section class="space-y-3">
+  <h2 class="section-title">Secure Payment</h2>
+  <div id="paypal-button-container"></div>
+</section>
+
+<footer class="text-center text-sm text-white/40 pt-6 border-t border-white/10">
+  © <span id="year"></span> Mulbum3D
+</footer>
+
+</div>
+
+<script>
+// Year
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// Cost calculation
+let modelFile = null;
+let currentCost = 0;
+const itemsCostEl = document.getElementById("items-cost");
+const shippingCostEl = document.getElementById("shipping-cost");
+const costEl = document.getElementById("cost");
+
+function updateCost(sizeMB) {
+  const weight = sizeMB * 50;
+  const hours = sizeMB * 2;
+  const items = hours * 1 + weight * 0.01;
+  const shipping = items >= 50 ? 0 : 4.99;
+  currentCost = items + shipping;
+  itemsCostEl.textContent = `£${items.toFixed(2)}`;
+  shippingCostEl.textContent = shipping === 0 ? "FREE" : `£${shipping.toFixed(2)}`;
+  costEl.textContent = `£${currentCost.toFixed(2)}`;
+}
+
+// File upload validation
+document.getElementById("model-upload").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const allowed = ["obj", "3mf", "amf"];
+  const ext = file.name.split(".").pop().toLowerCase();
+
+  if (!allowed.includes(ext)) {
+    alert("Invalid file type. OBJ, 3MF, AMF only.");
+    e.target.value = "";
+    return;
+  }
+
+  if (file.size > 50 * 1024 * 1024) {
+    alert("File exceeds 50MB limit.");
+    e.target.value = "";
+    return;
+  }
+
+  modelFile = file;
+  updateCost(file.size / (1024*1024));
+});
+
+// PayPal Buttons + Discord logging
+paypal.Buttons({
+  createOrder: (data, actions) => {
+    if (!modelFile) { alert("Upload a model first."); return; }
+    return actions.order.create({
+      purchase_units: [{
+        description: "Mulbum3D Printing",
+        amount: { currency_code: "GBP", value: currentCost.toFixed(2) }
+      }]
+    });
+  },
+  onApprove: (data, actions) => actions.order.capture().then(details => {
+    fetch("/.netlify/functions/logOrder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orderId: data.orderID,
+        name: document.getElementById("customer-name").value,
+        postcode: document.getElementById("postcode").value,
+        address: document.getElementById("address").value,
+        plaColor: document.getElementById("pla-color").value,
+        fileName: modelFile.name,
+        totalCost: currentCost.toFixed(2),
+        payerEmail: details.payer.email_address
+      })
+    });
+    alert("Payment successful! Order logged.");
+  })
+}).render("#paypal-button-container");
+</script>
+
+</body>
+</html>
