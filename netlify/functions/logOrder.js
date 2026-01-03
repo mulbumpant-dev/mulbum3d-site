@@ -24,7 +24,7 @@ exports.handler = async (event) => {
       }]
     };
 
-    const res = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+    const res = await fetch(process.env.https://discordapp.com/api/webhooks/1456986141193670677/HCyuy4Ft76RfwEjbyVCyjxgVMUfHAYzO7laQHEFrU1S3rRqUO3LcpCTf6_whmtkPbZm0, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
