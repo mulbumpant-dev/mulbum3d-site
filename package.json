@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/mulbumpant-dev/mulbum3d-site#readme",
   "dependencies": {
+    "form-data": "^4.0.5",
     "node-fetch": "^2.7.0"
   }
 }
