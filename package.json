@@ -9,7 +9,17 @@
   "author": "Mulbum3D",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.6.7",
-    "form-data": "^4.0.0"
-  }
+    "form-data": "^4.0.5",
+    "node-fetch": "^2.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mulbumpant-dev/mulbum3d-site.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mulbumpant-dev/mulbum3d-site/issues"
+  },
+  "homepage": "https://github.com/mulbumpant-dev/mulbum3d-site#readme"
 }

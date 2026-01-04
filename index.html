@@ -9,7 +9,6 @@
 <script src="https://www.paypal.com/sdk/js?client-id=AWlxRpEWuzvjdHyQ__cKpDgK7pj-qfWo8qGO9BkOlUq_TpiRoChpAdRWsuQp3TqDdH6R3iuql3LBWO_u&currency=GBP"></script>
 
 <style>
-/* ===== BASE ===== */
 body {
   background: radial-gradient(circle at center, #1a1a1a 0%, #050505 70%);
   color: white;
@@ -23,7 +22,6 @@ body {
   border-radius: 1.75rem;
 }
 
-/* ===== NEON ORANGE ===== */
 .neon-orange {
   box-shadow:
     0 0 18px rgba(255,140,0,1),
@@ -43,7 +41,6 @@ body {
     0 0 80px rgba(255,140,0,0.8);
 }
 
-/* ===== INPUTS ===== */
 input, textarea, select {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.15);
@@ -71,24 +68,22 @@ label {
   margin-bottom: 0.25rem;
 }
 
-/* ===== PLA SELECT STYLING ===== */
+/* PLA select styling */
 #pla-color {
-  background-color: #000; /* black background */
-  color: white;           /* white text */
+  background-color: #000;
+  color: white;
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: 1.25rem;
   padding: 0.85rem;
   outline: none;
   width: 100%;
   line-height: 1.5;
-  appearance: none; /* removes default arrow style */
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-/* ===== RESPONSIVE ===== */
-
-/* Phones */
+/* Responsive */
 @media (max-width: 640px) {
   body { padding: 1rem; }
   h1 { font-size: 2rem; }
@@ -96,18 +91,15 @@ label {
   .upload-box { padding: 1.5rem; }
 }
 
-/* Tablets */
 @media (min-width: 641px) and (max-width: 1024px) {
   h1 { font-size: 2.75rem; }
   .glass { padding: 2rem; }
 }
 
-/* Desktop */
 @media (min-width: 1025px) {
   h1 { font-size: 3.5rem; }
   .glass { padding: 3rem; }
 
-  /* Desktop two-column layout for customer info */
   .customer-row {
     display: flex;
     gap: 1rem;
@@ -145,50 +137,24 @@ label {
   </div>
 </section>
 
-<!-- ===== CUSTOMER INFO (ALIGNED + DESKTOP TWO-COLUMN) ===== -->
 <section class="space-y-6">
   <h2 class="text-2xl font-bold text-orange-400">Customer Information</h2>
 
-  <!-- Desktop two-column row -->
   <div class="customer-row space-y-6 md:space-y-0">
     <div>
-      <label for="customer-name" class="text-sm text-gray-300 font-semibold">
-        Full name
-      </label>
-      <input
-        id="customer-name"
-        type="text"
-        placeholder="John Smith"
-        class="w-full"
-        required
-      >
+      <label for="customer-name" class="text-sm text-gray-300 font-semibold">Full name</label>
+      <input id="customer-name" type="text" placeholder="John Smith" class="w-full" required>
     </div>
 
     <div>
-      <label for="postcode" class="text-sm text-gray-300 font-semibold">
-        Postcode
-      </label>
-      <input
-        id="postcode"
-        type="text"
-        placeholder="SW1A 1AA"
-        class="w-full"
-        required
-      >
+      <label for="postcode" class="text-sm text-gray-300 font-semibold">Postcode</label>
+      <input id="postcode" type="text" placeholder="SW1A 1AA" class="w-full" required>
     </div>
   </div>
 
-  <!-- Address always full width -->
   <div>
-    <label for="address" class="text-sm text-gray-300 font-semibold">
-      Address
-    </label>
-    <textarea
-      id="address"
-      placeholder="House number, street, city"
-      class="w-full resize-none"
-      required
-    ></textarea>
+    <label for="address" class="text-sm text-gray-300 font-semibold">Address</label>
+    <textarea id="address" placeholder="House number, street, city" class="w-full resize-none" required></textarea>
   </div>
 </section>
 
@@ -202,9 +168,7 @@ label {
     <p class="text-sm text-gray-400">OBJ · 3MF · AMF — Max 8MB</p>
   </div>
 
-  <p id="upload-status" class="text-sm text-gray-400 italic">
-    No file uploaded
-  </p>
+  <p id="upload-status" class="text-sm text-gray-400 italic">No file uploaded</p>
 </section>
 
 <section class="space-y-4">
@@ -216,9 +180,7 @@ label {
     <option>Blue</option>
     <option>Green</option>
   </select>
-  <p class="text-sm text-gray-400">
-    Multi-colour prints? Contact me via Gmail.
-  </p>
+  <p class="text-sm text-gray-400">Multi-colour prints? Contact me via Gmail.</p>
 </section>
 
 <section class="space-y-4">
@@ -283,17 +245,32 @@ document.getElementById("model-upload").addEventListener("change", e => {
 
 paypal.Buttons({
   createOrder: (data, actions) => {
-    if (!modelFile) {
-      alert("Upload a model first");
-      return;
-    }
+    if (!modelFile) { alert("Upload a model first"); return; }
     return actions.order.create({
       purchase_units: [{
         amount: { currency_code: "GBP", value: currentCost.toFixed(2) }
       }]
     });
   },
-  onApprove: () => alert("Payment successful!")
+  onApprove: (data, actions) => actions.order.capture().then(details => {
+
+    // Send order to Netlify Function (Discord)
+    fetch('/.netlify/functions/logOrder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('customer-name').value,
+        postcode: document.getElementById('postcode').value,
+        address: document.getElementById('address').value,
+        plaColor: document.getElementById('pla-color').value,
+        totalCost: currentCost.toFixed(2),
+        payerEmail: details.payer.email_address
+      })
+    })
+    .then(() => alert('Payment complete! Order sent to Discord.'))
+    .catch(() => alert('Payment succeeded but logging failed.'));
+    
+  })
 }).render("#paypal-button-container");
 </script>
 
