@@ -1,25 +1,15 @@
 {
   "name": "mulbum3d-site",
   "version": "1.0.0",
-  "description": "",
+  "description": "3D Printing Service site with PayPal and Discord logging",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "echo \"Netlify site\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mulbumpant-dev/mulbum3d-site.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/mulbumpant-dev/mulbum3d-site/issues"
-  },
-  "homepage": "https://github.com/mulbumpant-dev/mulbum3d-site#readme",
+  "author": "Mulbum3D",
+  "license": "MIT",
   "dependencies": {
-    "form-data": "^4.0.5",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.6.7",
+    "form-data": "^4.0.0"
   }
 }
