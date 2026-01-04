@@ -3,68 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Printing Service</title>
+<title>Mulbum3D Printing</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=AWlxRpEWuzvjdHyQ__cKpDgK7pj-qfWo8qGO9BkOlUq_TpiRoChpAdRWsuQp3TqDdH6R3iuql3LBWO_u&currency=GBP"></script>
 
 <style>
-  body {
-    background: radial-gradient(circle at center, #1a1a1a 0%, #000 70%);
-    color: #ffffff;
-    font-family: Inter, system-ui, sans-serif;
-  }
+/* ===== BASE ===== */
+body {
+  background: radial-gradient(circle at center, #1a1a1a 0%, #050505 70%);
+  color: white;
+  font-family: Inter, system-ui, sans-serif;
+}
 
-  .glass {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 1.5rem;
-  }
+.glass {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 1.75rem;
+}
 
-  .neon-orange {
-    box-shadow:
-      0 0 12px rgba(255,140,0,0.8),
-      0 0 35px rgba(255,140,0,0.5);
-  }
+/* ===== NEON ORANGE ===== */
+.neon-orange {
+  box-shadow:
+    0 0 18px rgba(255,140,0,1),
+    0 0 55px rgba(255,140,0,0.85);
+}
 
-  .upload-box {
-    border: 2px dashed rgba(255,140,0,0.6);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    text-align: center;
-    transition: 0.3s ease;
-  }
+.upload-box {
+  border-radius: 1.75rem;
+  padding: 2rem;
+  text-align: center;
+  transition: 0.3s ease;
+}
 
-  .upload-box:hover {
-    box-shadow:
-      0 0 20px rgba(255,140,0,0.8),
-      0 0 45px rgba(255,140,0,0.5);
-  }
+.upload-box:hover {
+  box-shadow:
+    0 0 28px rgba(255,140,0,1),
+    0 0 80px rgba(255,140,0,0.8);
+}
 
-  input, textarea, select {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 1rem;
-    padding: 0.75rem;
-    color: white;
-    outline: none;
-  }
+/* ===== INPUTS ===== */
+input, textarea, select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 1.25rem;
+  padding: 0.85rem;
+  color: white;
+  outline: none;
+}
 
-  input::placeholder, textarea::placeholder {
-    color: rgba(255,255,255,0.6);
-  }
+input::placeholder, textarea::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Phones */
+@media (max-width: 640px) {
+  body { padding: 1rem; }
+  h1 { font-size: 2rem; }
+  .glass { padding: 1.25rem; }
+  .upload-box { padding: 1.5rem; }
+}
+
+/* Tablets */
+@media (min-width: 641px) and (max-width: 1024px) {
+  h1 { font-size: 2.75rem; }
+  .glass { padding: 2rem; }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  h1 { font-size: 3.5rem; }
+  .glass { padding: 3rem; }
+}
 </style>
 </head>
 
 <body class="min-h-screen flex justify-center p-6">
 
-<div class="max-w-3xl w-full glass p-8 space-y-8">
+<div class="max-w-3xl w-full glass space-y-8">
 
 <header class="text-center space-y-4">
   <img src="logo.png" class="w-44 mx-auto">
-  <h1 class="text-4xl font-extrabold text-orange-400">Professional 3D Printing</h1>
-  <p class="text-gray-400">Fast, precise, and affordable custom prints</p>
+  <h1 class="font-extrabold text-orange-400">Professional 3D Printing</h1>
+  <p class="text-gray-400">Fast · Precise · Premium</p>
 </header>
 
 <div class="glass p-4 text-center">
@@ -73,27 +97,36 @@
   <p class="text-sm text-gray-500">Free shipping over £50</p>
 </div>
 
-<section class="space-y-4">
-  <h2 class="text-2xl font-bold text-orange-400">Customer Information</h2>
-  <input id="customer-name" placeholder="Full name">
-  <input id="postcode" placeholder="Postcode">
-  <textarea id="address" placeholder="House number, street, city"></textarea>
+<section class="space-y-3">
+  <h2 class="text-2xl font-bold text-orange-400">Instant Estimate</h2>
+  <div class="glass p-4 space-y-2">
+    <div class="flex justify-between"><span>Items</span><strong id="items-cost">£0.00</strong></div>
+    <div class="flex justify-between"><span>Shipping</span><strong id="shipping-cost">£0.00</strong></div>
+    <hr class="border-gray-700">
+    <div class="flex justify-between text-lg font-bold"><span>Total</span><span id="total-cost">£0.00</span></div>
+  </div>
 </section>
 
 <section class="space-y-4">
-  <h2 class="text-2xl font-bold text-orange-400">Upload 3D Model</h2>
+  <h2 class="text-2xl font-bold text-orange-400">Customer Info</h2>
+  <input id="customer-name" placeholder="Full name">
+  <input id="postcode" placeholder="Postcode">
+  <textarea id="address" placeholder="Address"></textarea>
+</section>
 
-  <!-- FIXED upload box -->
-  <div class="upload-box neon-orange relative">
-    <input
-      id="model-upload"
-      type="file"
-      accept=".obj,.3mf,.amf"
-      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-    >
-    <p class="font-bold">Click to upload</p>
+<section class="space-y-4">
+  <h2 class="text-2xl font-bold text-orange-400">Upload Model</h2>
+
+  <div class="upload-box neon-orange relative glass">
+    <input id="model-upload" type="file" accept=".obj,.3mf,.amf"
+      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+    <p class="font-bold text-lg">Click to upload</p>
     <p class="text-sm text-gray-400">OBJ · 3MF · AMF — Max 8MB</p>
   </div>
+
+  <p id="upload-status" class="text-sm text-gray-400 italic">
+    No file uploaded
+  </p>
 </section>
 
 <section class="space-y-4">
@@ -106,7 +139,7 @@
     <option>Green</option>
   </select>
   <p class="text-sm text-gray-400">
-    For multi-colour prints, please contact me via Gmail.
+    Multi-colour prints? Contact me via Gmail.
   </p>
 </section>
 
@@ -122,10 +155,31 @@
 </div>
 
 <script>
+const HOURS_RATE = 1;
+const PLA_RATE = 0.01;
+const FREE_SHIPPING = 50;
+
 let modelFile = null;
 let currentCost = 0;
 
+const itemsCostEl = document.getElementById("items-cost");
+const shippingCostEl = document.getElementById("shipping-cost");
+const totalCostEl = document.getElementById("total-cost");
+const uploadStatusEl = document.getElementById("upload-status");
+
 document.getElementById("year").textContent = new Date().getFullYear();
+
+function updateEstimate(mb) {
+  const weight = mb * 50;
+  const hours = mb * 2;
+  const items = hours * HOURS_RATE + weight * PLA_RATE;
+  const ship = items >= FREE_SHIPPING ? 0 : 3.99;
+  currentCost = items + ship;
+
+  itemsCostEl.textContent = `£${items.toFixed(2)}`;
+  shippingCostEl.textContent = ship === 0 ? "FREE" : `£${ship.toFixed(2)}`;
+  totalCostEl.textContent = `£${currentCost.toFixed(2)}`;
+}
 
 document.getElementById("model-upload").addEventListener("change", e => {
   const file = e.target.files[0];
@@ -144,7 +198,9 @@ document.getElementById("model-upload").addEventListener("change", e => {
   }
 
   modelFile = file;
-  currentCost = 10; // example base cost
+  updateEstimate(file.size / (1024 * 1024));
+  uploadStatusEl.textContent = `Uploaded: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+  uploadStatusEl.classList.remove("italic");
 });
 
 paypal.Buttons({
@@ -159,26 +215,7 @@ paypal.Buttons({
       }]
     });
   },
-
-  onApprove: (data) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      fetch("/.netlify/functions/logOrder", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: modelFile.name,
-          fileContent: reader.result.split(",")[1],
-          name: document.getElementById("customer-name").value,
-          postcode: document.getElementById("postcode").value,
-          address: document.getElementById("address").value,
-          plaColor: document.getElementById("pla-color").value,
-          totalCost: currentCost
-        })
-      }).then(() => alert("Order complete!"));
-    };
-    reader.readAsDataURL(modelFile);
-  }
+  onApprove: () => alert("Payment successful!")
 }).render("#paypal-button-container");
 </script>
 
