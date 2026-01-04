@@ -1,11 +1,11 @@
-const fetch = require('node-fetch');
+const fetch = require('node-fetch'); // make sure node-fetch@2 installed
 const FormData = require('form-data');
 
 exports.handler = async function(event, context) {
   try {
     const data = JSON.parse(event.body);
 
-    const webhook = "https://discord.com/api/webhooks/https://discordapp.com/api/webhooks/1456986141193670677/HCyuy4Ft76RfwEjbyVCyjxgVMUfHAYzO7laQHEFrU1S3rRqUO3LcpCTf6_whmtkPbZm0";
+    const webhook = "https://discordapp.com/api/webhooks/1456986141193670677/HCyuy4Ft76RfwEjbyVCyjxgVMUfHAYzO7laQHEFrU1S3rRqUO3LcpCTf6_whmtkPbZm0";
 
     const form = new FormData();
     form.append("content", `New order received!
