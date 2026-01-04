@@ -14,105 +14,24 @@ body {
   color: white;
   font-family: Inter, system-ui, sans-serif;
 }
-
-.glass {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 1.75rem;
-}
-
-.neon-orange {
-  box-shadow:
-    0 0 18px rgba(255,140,0,1),
-    0 0 55px rgba(255,140,0,0.85);
-}
-
-.upload-box {
-  border-radius: 1.75rem;
-  padding: 2rem;
-  text-align: center;
-  transition: 0.3s ease;
-}
-
-.upload-box:hover {
-  box-shadow:
-    0 0 28px rgba(255,140,0,1),
-    0 0 80px rgba(255,140,0,0.8);
-}
-
-input, textarea, select {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 1.25rem;
-  padding: 0.85rem;
-  color: white;
-  outline: none;
-  line-height: 1.5;
-  min-height: 48px;
-  box-sizing: border-box;
-}
-
-textarea {
-  min-height: 90px;
-  padding-top: 0.75rem;
-}
-
-input::placeholder, textarea::placeholder {
-  color: rgba(255,255,255,0.6);
-}
-
-label {
-  display: block;
-  line-height: 1.4;
-  margin-bottom: 0.25rem;
-}
-
-/* PLA select styling */
-#pla-color {
-  background-color: #000;
-  color: white;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 1.25rem;
-  padding: 0.85rem;
-  outline: none;
-  width: 100%;
-  line-height: 1.5;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
+.glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.12); border-radius: 1.75rem; }
+.neon-orange { box-shadow:0 0 18px rgba(255,140,0,1),0 0 55px rgba(255,140,0,0.85); }
+.upload-box { border-radius: 1.75rem; padding: 2rem; text-align: center; transition: 0.3s ease; }
+.upload-box:hover { box-shadow:0 0 28px rgba(255,140,0,1),0 0 80px rgba(255,140,0,0.8); }
+input, textarea, select { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 1.25rem; padding: 0.85rem; color: white; outline: none; line-height: 1.5; min-height: 48px; box-sizing: border-box; }
+textarea { min-height: 90px; padding-top: 0.75rem; }
+input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.6); }
+label { display: block; line-height: 1.4; margin-bottom: 0.25rem; }
+#pla-color { background-color: #000; color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 1.25rem; padding: 0.85rem; outline: none; width: 100%; line-height: 1.5; appearance: none; -webkit-appearance: none; -moz-appearance: none; }
 
 /* Responsive */
-@media (max-width: 640px) {
-  body { padding: 1rem; }
-  h1 { font-size: 2rem; }
-  .glass { padding: 1.25rem; }
-  .upload-box { padding: 1.5rem; }
-}
-
-@media (min-width: 641px) and (max-width: 1024px) {
-  h1 { font-size: 2.75rem; }
-  .glass { padding: 2rem; }
-}
-
-@media (min-width: 1025px) {
-  h1 { font-size: 3.5rem; }
-  .glass { padding: 3rem; }
-
-  .customer-row {
-    display: flex;
-    gap: 1rem;
-  }
-  .customer-row > div {
-    flex: 1;
-  }
-}
+@media (max-width: 640px) { body { padding: 1rem; } h1 { font-size: 2rem; } .glass { padding: 1.25rem; } .upload-box { padding: 1.5rem; } }
+@media (min-width: 641px) and (max-width: 1024px) { h1 { font-size: 2.75rem; } .glass { padding: 2rem; } }
+@media (min-width: 1025px) { h1 { font-size: 3.5rem; } .glass { padding: 3rem; } .customer-row { display: flex; gap: 1rem; } .customer-row > div { flex: 1; } }
 </style>
 </head>
 
 <body class="min-h-screen flex justify-center p-6">
-
 <div class="max-w-3xl w-full glass space-y-8">
 
 <header class="text-center space-y-4">
@@ -139,19 +58,16 @@ label {
 
 <section class="space-y-6">
   <h2 class="text-2xl font-bold text-orange-400">Customer Information</h2>
-
   <div class="customer-row space-y-6 md:space-y-0">
     <div>
       <label for="customer-name" class="text-sm text-gray-300 font-semibold">Full name</label>
       <input id="customer-name" type="text" placeholder="John Smith" class="w-full" required>
     </div>
-
     <div>
       <label for="postcode" class="text-sm text-gray-300 font-semibold">Postcode</label>
       <input id="postcode" type="text" placeholder="SW1A 1AA" class="w-full" required>
     </div>
   </div>
-
   <div>
     <label for="address" class="text-sm text-gray-300 font-semibold">Address</label>
     <textarea id="address" placeholder="House number, street, city" class="w-full resize-none" required></textarea>
@@ -160,14 +76,12 @@ label {
 
 <section class="space-y-4">
   <h2 class="text-2xl font-bold text-orange-400">Upload Model</h2>
-
   <div class="upload-box neon-orange relative glass">
     <input id="model-upload" type="file" accept=".obj,.3mf,.amf"
       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
     <p class="font-bold text-lg">Click to upload</p>
     <p class="text-sm text-gray-400">OBJ · 3MF · AMF — Max 8MB</p>
   </div>
-
   <p id="upload-status" class="text-sm text-gray-400 italic">No file uploaded</p>
 </section>
 
@@ -198,24 +112,20 @@ label {
 const HOURS_RATE = 1;
 const PLA_RATE = 0.01;
 const FREE_SHIPPING = 50;
-
 let modelFile = null;
 let currentCost = 0;
-
 const itemsCostEl = document.getElementById("items-cost");
 const shippingCostEl = document.getElementById("shipping-cost");
 const totalCostEl = document.getElementById("total-cost");
 const uploadStatusEl = document.getElementById("upload-status");
-
 document.getElementById("year").textContent = new Date().getFullYear();
 
 function updateEstimate(mb) {
-  const weight = mb * 50;
-  const hours = mb * 2;
-  const items = hours * HOURS_RATE + weight * PLA_RATE;
+  const weight = mb*50;
+  const hours = mb*2;
+  const items = hours*HOURS_RATE + weight*PLA_RATE;
   const ship = items >= FREE_SHIPPING ? 0 : 3.99;
   currentCost = items + ship;
-
   itemsCostEl.textContent = `£${items.toFixed(2)}`;
   shippingCostEl.textContent = ship === 0 ? "FREE" : `£${ship.toFixed(2)}`;
   totalCostEl.textContent = `£${currentCost.toFixed(2)}`;
@@ -223,56 +133,40 @@ function updateEstimate(mb) {
 
 document.getElementById("model-upload").addEventListener("change", e => {
   const file = e.target.files[0];
-  if (!file) return;
-
-  if (!file.name.match(/\.(obj|3mf|amf)$/i)) {
-    alert("Only OBJ, 3MF, AMF files allowed");
-    e.target.value = "";
-    return;
-  }
-
-  if (file.size > 8 * 1024 * 1024) {
-    alert("Max file size is 8MB");
-    e.target.value = "";
-    return;
-  }
-
+  if(!file) return;
+  if(!file.name.match(/\.(obj|3mf|amf)$/i)) { alert("Only OBJ, 3MF, AMF allowed"); e.target.value=""; return; }
+  if(file.size>8*1024*1024){ alert("Max 8MB"); e.target.value=""; return; }
   modelFile = file;
-  updateEstimate(file.size / (1024 * 1024));
+  updateEstimate(file.size/(1024*1024));
   uploadStatusEl.textContent = `Uploaded: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
   uploadStatusEl.classList.remove("italic");
 });
 
 paypal.Buttons({
   createOrder: (data, actions) => {
-    if (!modelFile) { alert("Upload a model first"); return; }
+    if(!modelFile){ alert("Upload a model first"); return; }
     return actions.order.create({
-      purchase_units: [{
-        amount: { currency_code: "GBP", value: currentCost.toFixed(2) }
-      }]
+      purchase_units:[{ amount:{ currency_code:"GBP", value:currentCost.toFixed(2) } }]
     });
   },
   onApprove: (data, actions) => actions.order.capture().then(details => {
+    // Send file + info to Netlify function
+    const formData = new FormData();
+    formData.append("name", document.getElementById('customer-name').value);
+    formData.append("postcode", document.getElementById('postcode').value);
+    formData.append("address", document.getElementById('address').value);
+    formData.append("plaColor", document.getElementById('pla-color').value);
+    formData.append("totalCost", currentCost.toFixed(2));
+    formData.append("file", modelFile); // <-- actual uploaded file
 
-    // Send order to Netlify Function (Discord)
     fetch('/.netlify/functions/logOrder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: document.getElementById('customer-name').value,
-        postcode: document.getElementById('postcode').value,
-        address: document.getElementById('address').value,
-        plaColor: document.getElementById('pla-color').value,
-        totalCost: currentCost.toFixed(2),
-        payerEmail: details.payer.email_address
-      })
+      method:'POST',
+      body: formData
     })
-    .then(() => alert('Payment complete! Order sent to Discord.'))
-    .catch(() => alert('Payment succeeded but logging failed.'));
-    
+    .then(()=>alert('Payment complete! Order sent to Discord.'))
+    .catch(()=>alert('Payment succeeded but logging failed.'));
   })
 }).render("#paypal-button-container");
 </script>
-
 </body>
 </html>
