@@ -1,51 +1,35 @@
-const fetch = require('node-fetch');
-const FormData = require('form-data');
-const Busboy = require('busboy');
+const fs = require("fs");
+const path = require("path");
+const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
-  return new Promise((resolve) => {
-    const bb = Busboy({ headers: event.headers });
-    const fields = {};
-    let fileBuffer = null;
-    let fileName = '';
+  try {
+    const body = JSON.parse(event.body);
 
-    bb.on('file', (name, file, info) => {
-      fileName = info.filename;
-      const chunks = [];
-      file.on('data', (chunk) => chunks.push(chunk));
-      file.on('end', () => { fileBuffer = Buffer.concat(chunks); });
+    // Temporary file download URL (served from Netlify)
+    const downloadUrl = `https://YOUR-SITE-NAME.netlify.app/.netlify/functions/downloadTemp?file=${encodeURIComponent(body.fileName)}`;
+
+    // Discord webhook payload
+    const payload = {
+      content: `🟧 New 3D Print Order
+👤 Name: ${body.name}
+📍 Postcode: ${body.postcode}
+🏠 Address: ${body.address}
+🎨 PLA: ${body.plaColor}
+💷 Total: £${body.totalCost}
+
+📦 File uploaded
+🔗 Download here: ${downloadUrl}`
+    };
+
+    await fetch(process.env.DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
 
-    bb.on('field', (name, val) => { fields[name] = val; });
-
-    bb.on('close', async () => {
-      try {
-        const webhook = "https://discordapp.com/api/webhooks/1456986141193670677/HCyuy4Ft76RfwEjbyVCyjxgVMUfHAYzO7laQHEFrU1S3rRqUO3LcpCTf6_whmtkPbZm0";
-        const form = new FormData();
-
-        form.append("content", `New order received!
-Name: ${fields.name}
-Postcode: ${fields.postcode}
-Address: ${fields.address}
-PLA Color: ${fields.plaColor}
-Total: £${fields.totalCost}`);
-
-        if (fileBuffer) {
-          form.append("file", fileBuffer, { filename: fileName });
-        }
-
-        const res = await fetch(webhook, { method: 'POST', body: form });
-
-        if (!res.ok) {
-          resolve({ statusCode: 500, body: "Failed to send to Discord" });
-        } else {
-          resolve({ statusCode: 200, body: "Logged successfully" });
-        }
-      } catch (err) {
-        resolve({ statusCode: 500, body: err.toString() });
-      }
-    });
-
-    bb.end(Buffer.from(event.body, 'base64'));
-  });
+    return { statusCode: 200, body: "Order logged" };
+  } catch (err) {
+    return { statusCode: 500, body: err.toString() };
+  }
 };
