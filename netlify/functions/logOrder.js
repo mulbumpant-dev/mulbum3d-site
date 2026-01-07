@@ -1,35 +1,54 @@
-const fs = require("fs");
-const path = require("path");
-const fetch = require("node-fetch");
+const { google } = require('googleapis');
+const fetch = require('node-fetch');
 
-exports.handler = async (event) => {
+const WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1456986141193670677/HCyuy4Ft76RfwEjbyVCyjxgVMUfHAYzO7laQHEFrU1S3rRqUO3LcpCTf6_whmtkPbZm0';
+const FOLDER_ID = 'https://drive.google.com/drive/folders/1MzmD9oyAKThEt2vIpTq50noABlPxr9JF?usp=sharing';
+
+const auth = new google.auth.GoogleAuth({
+  credentials: require('./service-account.json'), // your downloaded JSON
+  scopes: ['https://www.googleapis.com/auth/drive.file']
+});
+
+exports.handler = async function(event) {
   try {
-    const body = JSON.parse(event.body);
+    const data = JSON.parse(event.body);
 
-    // Temporary file download URL (served from Netlify)
-    const downloadUrl = `https://YOUR-SITE-NAME.netlify.app/.netlify/functions/downloadTemp?file=${encodeURIComponent(body.fileName)}`;
-
-    // Discord webhook payload
-    const payload = {
-      content: `🟧 New 3D Print Order
-👤 Name: ${body.name}
-📍 Postcode: ${body.postcode}
-🏠 Address: ${body.address}
-🎨 PLA: ${body.plaColor}
-💷 Total: £${body.totalCost}
-
-📦 File uploaded
-🔗 Download here: ${downloadUrl}`
+    // Upload file to Google Drive
+    const drive = google.drive({ version: 'v3', auth });
+    const fileMetadata = { name: data.fileName, parents: [FOLDER_ID] };
+    const media = {
+      mimeType: 'application/octet-stream',
+      body: Buffer.from(data.fileBase64, 'base64')
     };
 
-    await fetch(process.env.DISCORD_WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    const file = await drive.files.create({
+      resource: fileMetadata,
+      media,
+      fields: 'id, webViewLink'
     });
 
-    return { statusCode: 200, body: "Order logged" };
+    const link = file.data.webViewLink; // This is the link you can send
+
+    // Send to Discord
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: `New Order!
+Name: ${data.name}
+Postcode: ${data.postcode}
+Address: ${data.address}
+PLA Colour: ${data.color}
+Quantity: ${data.qty}
+Total: £${data.total}
+File: ${data.fileName}
+Download Link: ${link}`
+      })
+    });
+
+    return { statusCode: 200, body: 'Order uploaded and sent!' };
   } catch (err) {
-    return { statusCode: 500, body: err.toString() };
+    console.error(err);
+    return { statusCode: 500, body: 'Error uploading order' };
   }
 };

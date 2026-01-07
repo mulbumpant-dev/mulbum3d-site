@@ -1,206 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D Printing Service</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mulbum3D — Professional 3D Printing</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=AWlxRpEWuzvjdHyQ__cKpDgK7pj-qfWo8qGO9BkOlUq_TpiRoChpAdRWsuQp3TqDdH6R3iuql3LBWO_u&currency=GBP"></script>
+
 <style>
-/* Glassy buttons and inputs */
-.glass-btn {
-  background: rgba(255,165,0,0.25);
-  border: 2px solid rgba(255,165,0,0.5);
-  backdrop-filter: blur(10px);
-  color: white;
-  font-weight: bold;
-  border-radius: 1rem;
-  padding: 0.75rem 1.5rem;
-  transition: 0.3s;
-  box-shadow: 0 0 20px rgba(255,165,0,0.6);
-}
-.glass-btn:hover {
-  box-shadow: 0 0 30px rgba(255,165,0,0.9);
-  transform: translateY(-2px);
-}
-.glass-input, select, textarea {
-  background: rgba(255,255,255,0.05);
-  border: none;
-  color: white;
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
-  backdrop-filter: blur(5px);
-}
-body {
-  background: radial-gradient(circle at center, #111111 0%, #000000 100%);
-  color: white;
-}
+  body {
+    background: #000;
+    color: #fff;
+    font-family: sans-serif;
+  }
+  .card {
+    background: rgba(20,20,20,0.9);
+    border-radius: 1.5rem;
+    padding: 2rem;
+  }
+  .input {
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 1rem;
+    padding: 0.75rem;
+    color: #fff;
+    width: 100%;
+  }
+  .input:focus {
+    outline: none;
+    border-color: #f97316;
+  }
+  .upload-btn {
+    background: #f97316;
+    color: #000;
+    border-radius: 1.5rem;
+    padding: 1rem;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    display: inline-block;
+    width: 100%;
+  }
+  .upload-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 40px rgba(255,140,0,0.9);
+  }
+  hr {
+    border-color: rgba(255,140,0,0.5);
+  }
 </style>
 </head>
+
 <body class="min-h-screen flex justify-center p-6">
-<div class="max-w-4xl w-full bg-black/60 rounded-3xl shadow-2xl p-8 space-y-8">
 
-  <header class="text-center space-y-4">
-    <img src="logo.png" alt="Mulbum3D logo" class="w-40 sm:w-48 mx-auto">
-    <h1 class="text-4xl font-extrabold tracking-tight text-white">Professional 3D Printing</h1>
-    <p class="text-gray-300 text-lg">Fast, precise, and affordable custom 3D prints</p>
-  </header>
+<div class="w-full max-w-3xl card space-y-8">
 
-  <div class="bg-black/40 border border-orange-500 rounded-xl p-4 text-center">
-    <p class="text-gray-300">Pricing:</p>
-    <p class="font-semibold text-white">£1 / hour machine time · £0.01 / gram PLA</p>
-    <p class="text-sm text-gray-400">Free shipping on orders over £50</p>
+<header class="text-center space-y-3">
+  <img src="logo.png" class="mx-auto h-20" />
+  <h1 class="text-4xl font-extrabold">Professional 3D Printing</h1>
+  <p class="text-gray-400">Fast · Precise · Affordable</p>
+</header>
+
+<section class="text-center text-sm text-gray-400">
+  Pricing: <b>£0.02 / minute</b> · <b>£0.01 / gram PLA</b><br>
+  Multi-coloured prints? <b>Contact me via Gmail</b>
+</section>
+
+<section class="card space-y-3">
+  <h2 class="text-xl font-bold">Instant Estimate</h2>
+  <div class="flex justify-between">
+    <span>Items</span>
+    <span id="items-cost">£0.00</span>
+  </div>
+  <div class="flex justify-between">
+    <span>Shipping</span>
+    <span id="shipping-cost">£0.00</span>
+  </div>
+  <hr>
+  <div class="flex justify-between text-2xl font-bold">
+    <span>Total</span>
+    <span id="total-cost">£0.00</span>
+  </div>
+</section>
+
+<section class="space-y-3">
+  <h2 class="text-xl font-bold">Customer Information</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <input id="name" class="input" placeholder="Full name" />
+    <input id="postcode" class="input" placeholder="Postcode" />
+  </div>
+  <textarea id="address" class="input w-full" placeholder="Full address"></textarea>
+</section>
+
+<section class="space-y-3">
+  <h2 class="text-xl font-bold">Upload 3D Model</h2>
+  <label class="upload-btn">
+    Choose File
+    <input id="file" type="file" hidden />
+  </label>
+  <p id="file-status" class="text-sm text-gray-400">No file selected</p>
+</section>
+
+<section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div>
+    <h2 class="text-xl font-bold mb-2">PLA Colour</h2>
+    <select id="color" class="input w-full">
+      <option>Black</option>
+      <option>White</option>
+      <option>Gray</option>
+      <option>Red</option>
+      <option>Blue</option>
+      <option>Yellow</option>
+      <option>Green</option>
+      <option>Orange</option>
+    </select>
   </div>
 
-  <!-- Cost Estimator -->
-  <section class="space-y-5">
-    <h2 class="text-2xl font-bold text-orange-400">Instant Cost Estimator</h2>
-    <div class="bg-black/30 border border-orange-500 rounded-xl p-5 space-y-2 shadow-sm">
-      <div class="flex justify-between"><span>Items</span><strong id="items-cost">£0.00</strong></div>
-      <div class="flex justify-between"><span>Shipping</span><strong id="shipping-cost">£0.00</strong></div>
-      <hr class="border-orange-500">
-      <div class="flex justify-between text-xl font-bold"><span>Total</span><span id="cost">£0.00</span></div>
-    </div>
-  </section>
+  <div>
+    <h2 class="text-xl font-bold mb-2">Quantity</h2>
+    <input id="qty" type="number" min="1" value="1" class="input w-full" />
+  </div>
+</section>
 
-  <!-- Customer Info -->
-  <section class="space-y-4">
-    <h2 class="text-2xl font-bold text-orange-400">Customer Information</h2>
-    <input id="customer-name" type="text" class="glass-input w-full" placeholder="Full name" required>
-    <input id="postcode" type="text" class="glass-input w-full" placeholder="Postcode" required>
-    <textarea id="address" class="glass-input w-full" placeholder="House number, street, city" required></textarea>
-  </section>
+<section>
+  <h2 class="text-xl font-bold mb-2">Payment</h2>
+  <div id="paypal"></div>
+</section>
 
-  <!-- Upload -->
-  <section class="space-y-3">
-    <h2 class="text-2xl font-bold text-orange-400">Upload Your 3D Model</h2>
-    <div class="p-6 text-center">
-      <input id="model-upload" type="file" class="glass-input w-full" accept=".obj,.3mf,.amf">
-      <p class="text-sm text-blue-300 mt-2">Accepted: OBJ, 3MF, AMF · Max 50MB</p>
-      <p id="upload-status" class="mt-3 text-green-400 hidden">✔ File uploaded successfully</p>
-      <p class="text-xs text-blue-200 mt-4">Large files are stored temporarily for download after checkout.</p>
-    </div>
-  </section>
+<footer class="text-center text-gray-500 text-sm pt-4">
+  © <span id="year"></span> Mulbum3D
+</footer>
 
-  <!-- PLA Color -->
-  <section class="space-y-3">
-    <h2 class="text-2xl font-bold text-orange-400">Select PLA Color</h2>
-    <select id="pla-color" class="glass-input w-full">
-      <option value="white">White</option>
-      <option value="black">Black</option>
-      <option value="red">Red</option>
-      <option value="blue">Blue</option>
-      <option value="green">Green</option>
-    </select>
-  </section>
-
-  <!-- Payment -->
-  <section class="space-y-3">
-    <h2 class="text-2xl font-bold text-orange-400">Secure Payment</h2>
-    <p class="text-gray-300">Checkout safely using PayPal</p>
-    <div id="paypal-button-container"></div>
-    <p id="payment-hint" class="text-sm text-gray-500">Upload a model to continue</p>
-  </section>
-
-  <!-- Footer -->
-  <footer class="text-center text-sm text-gray-400 pt-6 border-t border-orange-500">
-    © <span id="year"></span> 3D Printing Service · All rights reserved
-  </footer>
 </div>
 
 <script>
-const HOURS_RATE = 1;
+document.getElementById("year").textContent = new Date().getFullYear();
+
+const RATE_PER_MIN = 0.02;
 const PLA_RATE = 0.01;
-const SHIPPING_TIERS = [
-  { max: 250, cost: 2.99 },
-  { max: 500, cost: 3.99 },
-  { max: 1000, cost: 5.99 },
-  { max: Infinity, cost: 8.99 }
-];
-const FREE_SHIPPING_THRESHOLD = 50;
+const SHIPPING_FLAT = 4.99;
+const FREE_THRESHOLD = 50;
 
-let modelFile = null;
-let currentCost = 0;
-let currentShipping = 0;
-
-const itemsCostEl = document.getElementById("items-cost");
-const shippingCostEl = document.getElementById("shipping-cost");
-const costEl = document.getElementById("cost");
-const hintEl = document.getElementById("payment-hint");
-const uploadStatusEl = document.getElementById("upload-status");
-
-function calculateShipping(weight) {
-  for (const tier of SHIPPING_TIERS) if (weight <= tier.max) return tier.cost;
-  return 0;
-}
+let file = null;
+let cost = 0;
 
 function updateCost(sizeMB) {
-  const weight = sizeMB * 50;
-  const hours = sizeMB * 2;
-  const itemsCost = hours * HOURS_RATE + weight * PLA_RATE;
-  currentShipping = itemsCost >= FREE_SHIPPING_THRESHOLD ? 0 : calculateShipping(weight);
-  currentCost = itemsCost + currentShipping;
-  itemsCostEl.textContent = `£${itemsCost.toFixed(2)}`;
-  shippingCostEl.textContent = currentShipping === 0 && itemsCost >= FREE_SHIPPING_THRESHOLD ? "FREE" : `£${currentShipping.toFixed(2)}`;
-  costEl.textContent = `£${currentCost.toFixed(2)}`;
-  hintEl.style.display = currentCost > 0 ? "none" : "block";
+  const grams = sizeMB * 50;
+  const minutes = sizeMB * 120;
+  const qty = Number(document.getElementById("qty").value);
+
+  const items = ((minutes * RATE_PER_MIN) + (grams * PLA_RATE)) * qty;
+  const shipping = items >= FREE_THRESHOLD ? 0 : SHIPPING_FLAT;
+  cost = items + shipping;
+
+  document.getElementById("items-cost").textContent = "£" + items.toFixed(2);
+  document.getElementById("shipping-cost").textContent = shipping === 0 ? "FREE" : "£" + shipping.toFixed(2);
+  document.getElementById("total-cost").textContent = "£" + cost.toFixed(2);
 }
 
-document.getElementById('model-upload').addEventListener('change', e => {
-  if(e.target.files.length === 0) return;
-  const file = e.target.files[0];
-  const allowed = ["obj","3mf","amf"];
-  const ext = file.name.split(".").pop().toLowerCase();
-  if(!allowed.includes(ext)){
-    alert("Only OBJ, 3MF, AMF files are allowed.");
-    e.target.value = "";
-    return;
+document.getElementById("file").addEventListener("change", async e => {
+  if (!e.target.files.length) return;
+
+  const f = e.target.files[0];
+  const ext = f.name.split(".").pop().toLowerCase();
+  if (!["obj","3mf","amf"].includes(ext)) { 
+    alert("Only OBJ, 3MF, AMF allowed"); 
+    e.target.value=""; 
+    return; 
   }
-  if(file.size > 50*1024*1024){
-    alert("File must be under 50MB.");
-    e.target.value = "";
-    return;
+  if (f.size > 50*1024*1024) { 
+    alert("File must be under 50MB"); 
+    e.target.value=""; 
+    return; 
   }
-  modelFile = file;
-  updateCost(file.size / (1024*1024));
-  uploadStatusEl.classList.remove("hidden");
+
+  file = f;
+  document.getElementById("file-status").textContent = "Uploaded: " + f.name;
+  updateCost(f.size/1024/1024);
+
+  // Send Base64 to Netlify function for storage & Discord logging
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64 = reader.result.split(',')[1];
+    await fetch("/.netlify/functions/logOrder", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        name: document.getElementById("name").value,
+        postcode: document.getElementById("postcode").value,
+        address: document.getElementById("address").value,
+        color: document.getElementById("color").value,
+        qty: document.getElementById("qty").value,
+        total: cost.toFixed(2),
+        fileName: file.name,
+        fileBase64: base64
+      })
+    });
+  };
+  reader.readAsDataURL(f);
 });
 
-document.getElementById('year').textContent = new Date().getFullYear();
+document.getElementById("qty").addEventListener("input", () => { if(file) updateCost(file.size/1024/1024); });
 
 paypal.Buttons({
   createOrder: (data, actions) => {
-    if(!modelFile || currentCost <= 0){
-      alert('Upload a model first');
-      return;
-    }
+    if(!file){ alert("Upload a file first"); return; }
     return actions.order.create({
-      purchase_units:[{ description:'3D Printing Service', amount:{currency_code:'GBP', value:currentCost.toFixed(2)} }]
+      purchase_units:[{ amount:{currency_code:"GBP", value:cost.toFixed(2)} }]
     });
   },
-  onApprove:(data, actions) => actions.order.capture().then(details => {
-    const payload = {
-      orderId: data.orderID,
-      name: document.getElementById('customer-name').value,
-      postcode: document.getElementById('postcode').value,
-      address: document.getElementById('address').value,
-      plaColor: document.getElementById('pla-color').value,
-      fileName: modelFile.name,
-      totalCost: currentCost.toFixed(2),
-      payerEmail: details.payer.email_address
-    };
-
-    fetch('/.netlify/functions/logOrder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(() => {
-      alert('Payment complete! Order logged successfully.');
-    }).catch(() => {
-      alert('Payment succeeded but logging failed. Please contact support.');
-    });
+  onApprove: (data, actions) => actions.order.capture().then(details=>{
+    alert("Order confirmed!");
   })
-}).render('#paypal-button-container');
+}).render("#paypal");
+
 </script>
+
 </body>
 </html>
